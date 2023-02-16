@@ -1,9 +1,0 @@
-.task-container{
-    display: flex;
-    flex-direction: column;
-}
-
-.container-title{
-    text-align: center;
-    font-size: 28px;
-}
