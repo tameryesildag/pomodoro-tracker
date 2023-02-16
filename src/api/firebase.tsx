@@ -43,16 +43,29 @@ export function addTask(description:string){
 }
 
 export function deleteTask(taskId:string){
-    const docToDelete = doc(db, "tasks", taskId);
-    deleteDoc(docToDelete);
+    return new Promise((resolve, reject) => {
+        const docToDelete = doc(db, "tasks", taskId);
+        deleteDoc(docToDelete).then(()=> {
+            resolve(true);
+        })
+    })
 }
 
 export function taskDone(taskId:string){
-    const docToUpdate = doc(db, "tasks", taskId);
-    updateDoc(docToUpdate, {done:true});
+    return new Promise((resolve, reject) => {
+        const docToUpdate = doc(db, "tasks", taskId);
+        updateDoc(docToUpdate, {done:true}).then(()=> {
+            resolve(true);
+        });
+    })
+
 }
 
 export function taskUndone(taskId:string){
-    const docToUpdate = doc(db, "tasks", taskId);
-    updateDoc(docToUpdate, {done:false});
+    return new Promise((resolve, reject) => {
+        const docToUpdate = doc(db, "tasks", taskId);
+        updateDoc(docToUpdate, {done:false}).then(()=> {
+            resolve(true);
+        });
+    })
 }

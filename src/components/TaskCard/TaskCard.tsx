@@ -18,14 +18,14 @@ export default function TaskCard(props:TaskCardProp){
     }
 
     function onDeleteClick(event:React.MouseEvent){
-        deleteTask(props.task.id);
-        props.updateTasks();
+        deleteTask(props.task.id).then(() => {
+            props.updateTasks();            
+        });
         setMenuDisplay("none");
     }
 
     function onDoneClick(event:React.MouseEvent){
-        props.task.done ? taskUndone(props.task.id) : taskDone(props.task.id);
-        props.updateTasks();
+        props.task.done ? taskUndone(props.task.id).then(() => props.updateTasks()) : taskDone(props.task.id).then(() => props.updateTasks());
         setMenuDisplay("none");
     }
 

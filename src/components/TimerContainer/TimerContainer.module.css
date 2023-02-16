@@ -1,0 +1,34 @@
+.timer-container{
+    margin-top: 20px;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.start-stop-button{
+    background-color: #222831;
+    border: 1px solid #f2f2f2;
+    color: #f2f2f2;
+    padding: 10px;
+    width: 200px;
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.control{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.start-stop-button:hover{
+    background-color: #393e46;
+}
+
+.settings-button{
+    background-repeat: no-repeat;
+    width: 50px;
+    height: 50px;
+    box-sizing: border-box;
+    border: 1px solid white;
+    margin-left: 5px;
+}
