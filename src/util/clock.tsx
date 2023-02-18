@@ -1,12 +1,13 @@
-let minute:number = 25;
+let minute:number = 0;
 
-let second:number = 0;
+let second:number = 10;
 
 let running:boolean = false;
 
 export function tick(){
         if(!running) return;
         if(minute <= 0 && second <= 0){
+            running = false;
             return;
         }
         if(second === 0){
@@ -32,4 +33,13 @@ export function startStop(){
 
 export function getTime(){
     return ({second, minute});
+}
+
+export function setTime(newMinute:number, newSecond:number){
+    minute = newMinute;
+    second = newSecond;
+}
+
+export function isRunning(){
+    return running;
 }

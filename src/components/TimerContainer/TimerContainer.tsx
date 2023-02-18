@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { getTime, startStop} from "../../util/clock";
+import { getTime, startStop, isRunning} from "../../util/clock";
 import { Timer } from "../Timer/Timer";
 import styles from "./TimerContainer.module.css";
 import gearImage from "../../assets/gear.png";
+import alarmSound from "../../assets/alarm.mp3";
 
 export function TimerContainer(){
 
@@ -11,9 +12,15 @@ export function TimerContainer(){
     const [running, setRunning] = useState<boolean>(false);
 
     useEffect(() => {
-        setInterval(() => {
+        const timeInterval = setInterval(() => {
+            if(!isRunning()) return;
             let newSecond = getTime().second.toString();
             let newMinute = getTime().minute.toString();
+            if(newSecond == "0" && newMinute == "0"){
+                let audio = new Audio(alarmSound);
+                audio.play();
+                setRunning(false);  
+            }
             if(newSecond.length == 1) newSecond = "0" + newSecond;
             if(newMinute.length == 1) newMinute = "0" + newMinute;
             setSecond(newSecond);
