@@ -1,0 +1,20 @@
+.setting{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding: 5px;
+}
+
+.setting-text{
+    font-size: 18px;
+}
+
+.setting-switch{
+    transform: scale(1.4);
+}
+
+.input-container{
+    width: 100px;
+}

@@ -31,4 +31,5 @@
     box-sizing: border-box;
     border: 1px solid white;
     margin-left: 5px;
+    cursor: pointer;
 }
