@@ -1,0 +1,28 @@
+.header{
+    width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    font-size: 25px;
+    color: white;    
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.name {
+    margin-right: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.login-button {
+    margin-right: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.login-button:hover{
+    opacity: 0.5;
+}

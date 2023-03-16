@@ -1,4 +1,4 @@
-import {getTasks} from "./api/firebase";
+import { auth, getTasks, db } from "./api/firebase";
 import React from "react";
 import { useState, useEffect } from "react";
 import styles from "./App.module.css";
@@ -7,6 +7,10 @@ import Task from "./types/Task";
 import { TimerContainer } from "./components/TimerContainer/TimerContainer";
 import { SettingsWindow } from "./components/SettingsWindow/SettingsWindow";
 import "./assets/bootstrap.min.css";
+import { Header } from "./components/Header/Header";
+import { onAuthStateChanged } from "firebase/auth";
+import User from "./types/User";
+import { setDoc, doc } from "firebase/firestore";
 
 document.body.style.backgroundColor = "#222831";
 document.body.style.margin = "0";
@@ -15,20 +19,45 @@ function App() {
 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isSettingsWindowOpen, setIsSettingsWindowOpen] = useState<boolean>(false);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
-      getTasks().then(tasks => {
-        setTasks(tasks);
-      })
-  }, []);
-
-  function updateTasks(){
     getTasks().then(tasks => {
       setTasks(tasks);
+    }).catch((err) => {
+      console.log(err);
+      setTasks([]);
+    })
+  }, []);
+
+  function updateTasks() {
+    getTasks().then(tasks => {
+      setTasks(tasks);
+    }).catch(err => {
+      console.log(err);
+      setTasks([]);
     })
   }
 
-  function toggleSettingsWindow(event:React.MouseEvent){
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        setTasks([]);
+        setLoggedIn(false);
+      } else {
+        setDoc(doc(db, "users", user.uid), {
+          name: user.displayName,
+          email: user.email,
+        }, { merge: true }).then(() => {
+          updateTasks();
+          setLoggedIn(true);
+        });
+      }
+    })
+
+  }, []);
+
+  function toggleSettingsWindow(event: React.MouseEvent) {
     setIsSettingsWindowOpen(s => {
       return !s;
     })
@@ -36,6 +65,7 @@ function App() {
 
   return (
     <div className="App">
+      <Header loggedIn={loggedIn}></Header>
       <SettingsWindow closeWindow={toggleSettingsWindow} isOpen={isSettingsWindowOpen}></SettingsWindow>
       <main className={styles["content"]}>
         <TimerContainer toggleSettingsWindow={toggleSettingsWindow}></TimerContainer>
