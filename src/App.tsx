@@ -11,6 +11,7 @@ import { Header } from "./components/Header/Header";
 import { onAuthStateChanged } from "firebase/auth";
 import User from "./types/User";
 import { setDoc, doc } from "firebase/firestore";
+import { SettingContextProvider } from "./contexts/SettingsContext";
 
 document.body.style.backgroundColor = "#222831";
 document.body.style.margin = "0";
@@ -65,12 +66,14 @@ function App() {
 
   return (
     <div className="App">
-      <Header loggedIn={loggedIn}></Header>
-      <SettingsWindow closeWindow={toggleSettingsWindow} isOpen={isSettingsWindowOpen}></SettingsWindow>
-      <main className={styles["content"]}>
-        <TimerContainer toggleSettingsWindow={toggleSettingsWindow}></TimerContainer>
-        <TaskContainer updateTasks={updateTasks} tasks={tasks}></TaskContainer>
-      </main>
+      <SettingContextProvider>
+        <Header loggedIn={loggedIn}></Header>
+        <SettingsWindow closeWindow={toggleSettingsWindow} isOpen={isSettingsWindowOpen}></SettingsWindow>
+        <main className={styles["content"]}>
+          <TimerContainer toggleSettingsWindow={toggleSettingsWindow}></TimerContainer>
+          <TaskContainer updateTasks={updateTasks} tasks={tasks}></TaskContainer>
+        </main>
+      </SettingContextProvider>
     </div>
   );
 }

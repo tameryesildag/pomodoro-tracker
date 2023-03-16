@@ -1,14 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { getTime, startStop, isRunning, setOnTimeout } from "../../util/clock";
 import { Timer } from "../Timer/Timer";
 import styles from "./TimerContainer.module.css";
 import gearImage from "../../assets/gear.png";
 import alarmSound from "../../assets/alarm.mp3";
 import SettingType from "../../types/SettingType";
-
-type TimerContainerProps = {
-    toggleSettingsWindow(event: React.MouseEvent): void;
-}
+import { SettingContext } from "../../contexts/SettingsContext";
 
 let focusDuration = 25;
 let breakDuration = 10;
@@ -19,16 +16,19 @@ function addZero(num: string) {
     return num;
 }
 
+type TimerContainerProps = {
+    toggleSettingsWindow(event: React.MouseEvent): void;
+}
+
 export function TimerContainer(props: TimerContainerProps) {
 
-    if (localStorage.getItem("settings")) {
-        const settings = JSON.parse(localStorage.getItem("settings") as string) as SettingType[];
-        const focusSetting = settings.find(s => s.settingId == "focusDuration");
-        const breakSetting = settings.find(s => s.settingId == "breakDuration");
-        if (focusSetting && breakSetting) {
-            focusDuration = focusSetting.currentValue as number;
-            breakDuration = breakSetting.currentValue as number;
-        }
+    const { settings, setSettings } = useContext(SettingContext);
+
+    const focusSetting = settings.find(s => s.settingId == "focusDuration");
+    const breakSetting = settings.find(s => s.settingId == "breakDuration");
+    if (focusSetting && breakSetting) {
+        focusDuration = focusSetting.currentValue as number;
+        breakDuration = breakSetting.currentValue as number;
     }
 
     const [second, setSecond] = useState<string>("00");

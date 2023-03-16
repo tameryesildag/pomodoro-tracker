@@ -1,57 +1,21 @@
 import styles from "./SettingsWindow.module.css";
 import closeIcon from "../../assets/close.png";
 import Setting from "../Setting/Setting";
-import { useRef, useState } from "react";
+import { useRef, useState, useContext } from "react";
 import SettingType from "../../types/SettingType";
+import { defaultSettings } from "../../util/settings";
+import { SettingContext } from "../../contexts/SettingsContext";
 
 type SettingsWindowProp = {
     isOpen: boolean;
     closeWindow: Function;
 }
 
-const defaultSettings: SettingType[] = [
-    {
-        settingId: "focusDuration",
-        settingName: "Focus duration (minutes)",
-        defaultValue: 25,
-        currentValue: 25,
-        type: "number"
-    },
-    {
-        settingId: "breakDuration",
-        settingName: "Break Duration (minutes)",
-        defaultValue: 10,
-        currentValue: 10,
-        type: "number"
-    },
-    {
-        settingId: "alarmOn",
-        settingName: "Alarm",
-        defaultValue: true,
-        currentValue: true,
-        type: "boolean"
-    },
-    {
-        settingId: "autoStart",
-        settingName: "Start next timer automatically",
-        defaultValue: false,
-        currentValue: false,
-        type: "boolean"
-    }
-]
-
-let initialSettings = defaultSettings;
-
 export function SettingsWindow(props: SettingsWindowProp) {
 
-    if (localStorage.getItem("settings")){
-        initialSettings = JSON.parse(localStorage.getItem("settings") as string); 
-    }
-
-    const [settings, setSettings] = useState<SettingType[]>(initialSettings);
+    const {settings, setSettings} = useContext(SettingContext);
 
     function onCloseClick() {
-        localStorage.setItem("settings", JSON.stringify(settings));
         props.closeWindow();
     }
 
@@ -66,7 +30,6 @@ export function SettingsWindow(props: SettingsWindowProp) {
             }
             return newSettings;
         });
-        console.log(settings);
     }
 
     return (
