@@ -9,9 +9,15 @@ type providerProps = {
     children: React.ReactNode;
 }
 
+let initialSettings = defaultSettings;
+
+if(localStorage.getItem("settings")){
+    initialSettings = JSON.parse(localStorage.getItem("settings") as string) as SettingType[];
+}
+
 export const SettingContextProvider = (props: providerProps) => {
 
-    const [settings, setSettings] = useState<SettingType[]>(defaultSettings);
+    const [settings, setSettings] = useState<SettingType[]>(initialSettings);
 
     localStorage.setItem("settings", JSON.stringify(settings));
 
