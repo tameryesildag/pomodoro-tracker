@@ -1,6 +1,6 @@
 import styles from "./Setting.module.css";
 import { Form } from "react-bootstrap"
-import { useRef } from "react";
+import { useState } from "react";
 import SettingType from "../../types/SettingType";
 
 type SettingProps = {
@@ -10,10 +10,14 @@ type SettingProps = {
 
 export default function Setting(props: SettingProps) {
 
+    const [settingValue, setSettingValue] = useState<string>(props.setting.currentValue.toString());
+
     function onInputChange(event:React.ChangeEvent<HTMLInputElement>){
         if(props.setting.type == "boolean"){
             props.changeSetting(props.setting.settingId, event.target.checked);
         } else {
+            setSettingValue(event.target.value);
+            if(!event.target.value) return;
             props.changeSetting(props.setting.settingId, event.target.value);
         }
     }
@@ -27,7 +31,7 @@ export default function Setting(props: SettingProps) {
                 } else {
                     return (
                         <div className={styles["input-container"]}>
-                            <Form.Control onChange={onInputChange} value={props.setting.currentValue.toString()} className={styles["setting-text-input"]}></Form.Control>
+                            <Form.Control onChange={onInputChange} value={settingValue} className={styles["setting-text-input"]}></Form.Control>
                         </div>
                     );
                 }
