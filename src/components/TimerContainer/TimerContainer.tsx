@@ -3,6 +3,7 @@ import { getTime, startStop, isRunning, setOnTimeout, setOnSkip, skip, setOnTick
 import { Timer } from "../Timer/Timer";
 import styles from "./TimerContainer.module.css";
 import gearImage from "../../assets/gear.png";
+import nextImage from "../../assets/next.png";
 import alarmSound from "../../assets/alarm.mp3";
 import SettingType from "../../types/SettingType";
 import { SettingContext } from "../../contexts/SettingsContext";
@@ -68,9 +69,9 @@ export function TimerContainer(props: TimerContainerProps) {
         <div className={styles["timer-container"]}>
             <Timer minute={minute} second={second}></Timer>
             <div className={styles["control"]}>
-                <button onClick={onStartStopClick} className={styles["start-stop-button"]}>{running ? "Stop" : "Start"}</button>
-                <button onClick={onSkipClick} className={styles["skip-button"]}>▶</button>
-                <button onClick={props.toggleSettingsWindow} className={styles["settings-button"]} style={{ background: `url(${gearImage})`, backgroundSize: "cover" }}></button>
+                <button onClick={onStartStopClick} className={styles["start-stop-button"]}>{running ? "Pause" : "Start"}</button>
+                <button title="Skip" onClick={onSkipClick} className={styles["skip-button"]}><img className={styles["skip-image"]} src={nextImage}></img></button>
+                <button title="Settings" onClick={props.toggleSettingsWindow} className={styles["settings-button"]} style={{ background: `url(${gearImage})`, backgroundSize: "cover" }}></button>
             </div>
         </div>
     )

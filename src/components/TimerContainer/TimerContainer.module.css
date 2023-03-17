@@ -39,6 +39,7 @@
 }
 
 .skip-button{
+    background-repeat: no-repeat;
     color: white;
     background-color: transparent;
     width: 50px;
@@ -50,5 +51,9 @@
 }
 
 .skip-button:hover{
-    background-color: #393e46;
+    background-color: #393e46 !important;
+}
+
+.skip-image{
+    height: 90%;
 }
