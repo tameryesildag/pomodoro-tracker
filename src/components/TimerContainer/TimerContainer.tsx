@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { getTime, startStop, isRunning, setOnTimeout } from "../../util/clock";
+import { getTime, startStop, isRunning, setOnTimeout, setOnSkip, skip, setOnTick } from "../../util/clock";
 import { Timer } from "../Timer/Timer";
 import styles from "./TimerContainer.module.css";
 import gearImage from "../../assets/gear.png";
@@ -26,6 +26,7 @@ export function TimerContainer(props: TimerContainerProps) {
 
     const focusSetting = settings.find(s => s.settingId == "focusDuration");
     const breakSetting = settings.find(s => s.settingId == "breakDuration");
+
     if (focusSetting && breakSetting) {
         focusDuration = focusSetting.currentValue as number;
         breakDuration = breakSetting.currentValue as number;
@@ -35,23 +36,32 @@ export function TimerContainer(props: TimerContainerProps) {
     const [minute, setMinute] = useState<string>(addZero(focusDuration.toString()));
     const [running, setRunning] = useState<boolean>(false);
 
+    function updateTime(){
+        let newSecond = getTime().second.toString();
+        let newMinute = getTime().minute.toString();
+        setSecond(addZero(newSecond));
+        setMinute(addZero(newMinute));
+    }
+
     useEffect(() => {
         setOnTimeout(() => {
             setRunning(false);
         });
-    }, []);
-
-    useEffect(() => {
-        const timeInterval = setInterval(() => {
-            let newSecond = getTime().second.toString();
-            let newMinute = getTime().minute.toString();
-            setSecond(addZero(newSecond));
-            setMinute(addZero(newMinute));
-        }, 1000);
+        setOnSkip(() => {
+            setRunning(false);
+            updateTime();
+        });
+        setOnTick(() => {
+            updateTime();
+        });
     }, []);
 
     function onStartStopClick(event: React.MouseEvent) {
         setRunning(startStop());
+    }
+
+    function onSkipClick(event: React.MouseEvent){
+        skip();
     }
 
     return (
@@ -59,6 +69,7 @@ export function TimerContainer(props: TimerContainerProps) {
             <Timer minute={minute} second={second}></Timer>
             <div className={styles["control"]}>
                 <button onClick={onStartStopClick} className={styles["start-stop-button"]}>{running ? "Stop" : "Start"}</button>
+                <button onClick={onSkipClick} className={styles["skip-button"]}>▶</button>
                 <button onClick={props.toggleSettingsWindow} className={styles["settings-button"]} style={{ background: `url(${gearImage})`, backgroundSize: "cover" }}></button>
             </div>
         </div>

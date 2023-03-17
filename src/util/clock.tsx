@@ -1,25 +1,15 @@
 import { getSetting } from "./settings";
 import alarmSound from "../assets/alarm.mp3";
 
-const alarmAudio = new Audio(alarmSound); 
+const alarmAudio = new Audio(alarmSound);
 
-let focusTime:number = 25;
+export let focusDuration: number = 25;
 
-let breakTime:number = 10;
+export let breakDuration: number = 10;
 
-const focusSetting = getSetting("focusDuration");
+updateDurations();
 
-if (focusSetting) {
-    focusTime = focusSetting.currentValue as number;
-}
-
-const breakSetting = getSetting("breakDuration");
-
-if (breakSetting) {
-    breakTime = breakSetting.currentValue as number;
-}
-
-let minute: number = focusTime;
+let minute: number = focusDuration;
 
 let second: number = 0;
 
@@ -27,16 +17,43 @@ let running: boolean = false;
 
 let onBreak: boolean = false;
 
-let onTimeout:Function = () => void 0;
+let onTimeout: Function = () => {};
+
+let onSkip: Function = () => {};
+
+let onTick: Function = () => {};
+
+export function setOnTimeout(func: Function) {
+    onTimeout = func;
+}
+
+export function setOnSkip(func: Function){
+    onSkip = func;
+}
+
+export function setOnTick(func: Function){
+    onTick = func;
+}
+
+function updateDurations() {
+    const focusSetting = getSetting("focusDuration");
+    if (focusSetting) {
+        focusDuration = focusSetting.currentValue as number;
+    }
+    const breakSetting = getSetting("breakDuration");
+    if (breakSetting) {
+        breakDuration = breakSetting.currentValue as number;
+    }
+}
 
 export function tick() {
     if (!running) return;
+    onTick();
     if (minute <= 0 && second <= 0) {
         running = false;
         onBreak = !onBreak;
-        console.log(onBreak, breakTime);
-        if(onBreak) minute = breakTime;
-        else minute = focusTime;
+        if (onBreak) minute = breakDuration;
+        else minute = focusDuration;
         alarmAudio.play();
         onTimeout();
         return;
@@ -72,6 +89,13 @@ export function isRunning() {
     return running;
 }
 
-export function setOnTimeout(func:Function){
-    onTimeout = func;
+export function skip(){
+    if(onBreak){
+        setTime(focusDuration, 0);
+        onBreak = false;
+    } else {
+        setTime(breakDuration, 0);
+        onBreak = true;
+    }
+    onSkip();
 }
