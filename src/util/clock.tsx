@@ -15,7 +15,7 @@ let second: number = 0;
 
 let running: boolean = false;
 
-let onBreak: boolean = false;
+export let onBreak: boolean = false;
 
 let onTimeout: Function = () => {};
 
@@ -57,6 +57,7 @@ export function tick() {
         if (onBreak) minute = breakDuration;
         else minute = focusDuration;
         alarmAudio.play();
+        updateDurations();
         onTimeout();
         return;
     }
@@ -100,5 +101,7 @@ export function skip(){
         setTime(breakDuration, 0);
         onBreak = true;
     }
+    startStop();
+    updateDurations();
     onSkip();
 }

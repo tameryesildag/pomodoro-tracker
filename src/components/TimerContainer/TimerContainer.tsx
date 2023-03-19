@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { getTime, startStop, isRunning, setOnTimeout, setOnSkip, skip, setOnTick } from "../../util/clock";
+import * as clock from "../../util/clock";
 import { Timer } from "../Timer/Timer";
 import styles from "./TimerContainer.module.css";
 import gearImage from "../../assets/gear.png";
@@ -36,37 +36,45 @@ export function TimerContainer(props: TimerContainerProps) {
     const [second, setSecond] = useState<string>("00");
     const [minute, setMinute] = useState<string>(addZero(focusDuration.toString()));
     const [running, setRunning] = useState<boolean>(false);
+    const [onBreak, setOnBreak] = useState<boolean>(false);
 
-    function updateTime(){
-        let newSecond = getTime().second.toString();
-        let newMinute = getTime().minute.toString();
+    function updateTime() {
+        let newSecond = clock.getTime().second.toString();
+        let newMinute = clock.getTime().minute.toString();
         setSecond(addZero(newSecond));
         setMinute(addZero(newMinute));
     }
 
     useEffect(() => {
-        setOnTimeout(() => {
+        clock.setOnTimeout(() => {
             setRunning(false);
-        });
-        setOnSkip(() => {
-            setRunning(false);
+            setOnBreak(clock.onBreak);
             updateTime();
         });
-        setOnTick(() => {
+        clock.setOnSkip(() => {
+            setRunning(false);
+            setOnBreak(clock.onBreak);
+            updateTime();
+        });
+        clock.setOnTick(() => {
             updateTime();
         });
     }, []);
 
     function onStartStopClick(event: React.MouseEvent) {
-        setRunning(startStop());
+        setRunning(clock.startStop());
     }
 
-    function onSkipClick(event: React.MouseEvent){
-        skip();
+    function onSkipClick(event: React.MouseEvent) {
+        clock.skip();
     }
 
     return (
         <div className={styles["timer-container"]}>
+            <div className={styles["states-container"]}>
+                <div style={{opacity: onBreak ? "0.5" : 1}} className={styles["state"]}>Focus</div>
+                <div style={{opacity: !onBreak ? "0.5" : 1}} className={styles["state"]}>Break</div>
+            </div>
             <Timer minute={minute} second={second}></Timer>
             <div className={styles["control"]}>
                 <button onClick={onStartStopClick} className={styles["start-stop-button"]}>{running ? "Pause" : "Start"}</button>

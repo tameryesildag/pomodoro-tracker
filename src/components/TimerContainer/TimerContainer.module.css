@@ -4,6 +4,19 @@
     text-align: center;
 }
 
+.states-container{
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.state{
+    width: 100px;
+    border: 1px solid #f2f2f2;
+    margin-left: 5px;
+    font-size: 20px;
+}
+
 .start-stop-button{
     background-color: #222831;
     border: 1px solid #f2f2f2;
