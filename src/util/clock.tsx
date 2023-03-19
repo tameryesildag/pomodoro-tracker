@@ -23,6 +23,8 @@ let onSkip: Function = () => {};
 
 let onTick: Function = () => {};
 
+let timeoutId:NodeJS.Timeout;
+
 export function setOnTimeout(func: Function) {
     onTimeout = func;
 }
@@ -61,16 +63,17 @@ export function tick() {
     if (second === 0) {
         second = 59
         minute = minute - 1;
-        setTimeout(tick, 1000);
+        timeoutId = setTimeout(tick, 1000);
         return;
     } else {
         second = second - 1;
-        setTimeout(tick, 1000);
+        timeoutId = setTimeout(tick, 1000);
         return;
     }
 }
 
 export function startStop() {
+    if(timeoutId) clearTimeout(timeoutId);
     running = !running;
     tick();
     return running;
