@@ -101,7 +101,8 @@ export function skip(){
         setTime(breakDuration, 0);
         onBreak = true;
     }
-    startStop();
+    running = false;
+    if(timeoutId) clearTimeout(timeoutId);
     updateDurations();
     onSkip();
 }
