@@ -22,15 +22,6 @@ function App() {
   const [isSettingsWindowOpen, setIsSettingsWindowOpen] = useState<boolean>(false);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
-  useEffect(() => {
-    getTasks().then(tasks => {
-      setTasks(tasks);
-    }).catch((err) => {
-      console.log(err);
-      setTasks([]);
-    })
-  }, []);
-
   function updateTasks() {
     getTasks().then(tasks => {
       setTasks(tasks);
@@ -41,6 +32,13 @@ function App() {
   }
 
   useEffect(() => {
+    getTasks().then(tasks => {
+      setTasks(tasks);
+    }).catch((err) => {
+      console.log(err);
+      setTasks([]);
+    })
+
     onAuthStateChanged(auth, (user) => {
       if (!user) {
         setTasks([]);
@@ -55,6 +53,8 @@ function App() {
         });
       }
     })
+
+    document.title = "Pomodoro Tracker";
 
   }, []);
 

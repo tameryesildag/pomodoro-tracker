@@ -26,11 +26,9 @@ export function TimerContainer(props: TimerContainerProps) {
     const { settings, setSettings } = useContext(SettingContext);
 
     const focusSetting = settings.find(s => s.settingId == "focusDuration");
-    const breakSetting = settings.find(s => s.settingId == "breakDuration");
 
-    if (focusSetting && breakSetting) {
+    if (focusSetting) {
         focusDuration = focusSetting.currentValue as number;
-        breakDuration = breakSetting.currentValue as number;
     }
 
     const [second, setSecond] = useState<string>("00");

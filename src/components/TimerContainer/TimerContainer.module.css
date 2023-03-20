@@ -15,6 +15,13 @@
     border: 1px solid #f2f2f2;
     margin-left: 5px;
     font-size: 20px;
+    border-radius: 5px;
+}
+
+.control{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 .start-stop-button{
@@ -25,12 +32,7 @@
     width: 200px;
     cursor: pointer;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-}
-
-.control{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+    border-radius: 5px;
 }
 
 .start-stop-button:hover{
@@ -45,6 +47,7 @@
     border: 1px solid white;
     margin-left: 5px;
     cursor: pointer;
+    border-radius: 5px;
 }
 
 .settings-button:hover{
@@ -61,6 +64,7 @@
     border: 1px solid white;
     margin-left: 5px;
     cursor: pointer;
+    border-radius: 5px;
 }
 
 .skip-button:hover{
