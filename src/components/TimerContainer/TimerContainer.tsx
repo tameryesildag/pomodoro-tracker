@@ -43,13 +43,6 @@ export function TimerContainer(props: TimerContainerProps) {
     function updateTime() {
         let newSecond = clock.getTime().second.toString();
         let newMinute = clock.getTime().minute.toString();
-        if (currentEvent == "break") {
-            document.title = addZero(newMinute) + ":" + addZero(newSecond) + " - Break";
-        } else if (currentEvent == "longbreak") {
-            document.title = addZero(newMinute) + ":" + addZero(newSecond) + " - Long Break";
-        } else {
-            document.title = addZero(newMinute) + ":" + addZero(newSecond) + " - Focus";
-        }
         setSecond(addZero(newSecond));
         setMinute(addZero(newMinute));
     }
@@ -76,6 +69,14 @@ export function TimerContainer(props: TimerContainerProps) {
 
     function onSkipClick(event: React.MouseEvent) {
         clock.skip();
+    }
+
+    if (currentEvent == "break") {
+        document.title = addZero(minute) + ":" + addZero(second) + " - Break";
+    } else if (currentEvent == "longbreak") {
+        document.title = addZero(minute) + ":" + addZero(second) + " - Long Break";
+    } else {
+        document.title = addZero(minute) + ":" + addZero(second) + " - Focus";
     }
 
     return (

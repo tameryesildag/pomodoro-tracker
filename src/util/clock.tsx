@@ -63,7 +63,16 @@ export function tick() {
     if (minute <= 0 && second <= 0) {
         running = false;
         skip();
-        alarmAudio.play();
+
+        const alarmSetting = getSetting("alarmOn");
+        if(alarmSetting){
+            if(alarmSetting.currentValue){
+                alarmAudio.play();
+            }
+        } else {
+            alarmAudio.play();
+        }
+        
         updateDurations();
         onTimeout();
         return;
