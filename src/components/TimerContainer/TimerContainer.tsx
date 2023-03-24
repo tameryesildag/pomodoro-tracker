@@ -39,6 +39,7 @@ export function TimerContainer(props: TimerContainerProps) {
     function updateTime() {
         let newSecond = clock.getTime().second.toString();
         let newMinute = clock.getTime().minute.toString();
+        //document.title = addZero(newMinute) + ":" + addZero(newSecond);
         setSecond(addZero(newSecond));
         setMinute(addZero(newMinute));
     }
@@ -65,6 +66,12 @@ export function TimerContainer(props: TimerContainerProps) {
 
     function onSkipClick(event: React.MouseEvent) {
         clock.skip();
+    }
+
+    if(onBreak) {
+        document.title = "Break - Pomodoro Tracker";
+    } else {
+        document.title = "Focusing - Pomodoro Tracker";
     }
 
     return (
