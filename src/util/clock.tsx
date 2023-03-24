@@ -1,11 +1,14 @@
 import { getSetting } from "./settings";
 import alarmSound from "../assets/alarm.mp3";
+import { clearInterval, clearTimeout, setInterval, setTimeout } from 'worker-timers';
 
 const alarmAudio = new Audio(alarmSound);
 
 export let focusDuration: number = 25;
 
 export let breakDuration: number = 10;
+
+export let longBreakDuration: number = 30;
 
 updateDurations();
 
@@ -15,25 +18,27 @@ let second: number = 0;
 
 let running: boolean = false;
 
-export let onBreak: boolean = false;
+export let currentEvent: "break" | "focus" | "longbreak" = "focus";
 
-let onTimeout: Function = () => {};
+let onTimeout: Function = () => { };
 
-let onSkip: Function = () => {};
+let onSkip: Function = () => { };
 
-let onTick: Function = () => {};
+let onTick: Function = () => { };
 
-let timeoutId:NodeJS.Timeout;
+let timeoutId: number;
+
+let pomodoroCount = 0;
 
 export function setOnTimeout(func: Function) {
     onTimeout = func;
 }
 
-export function setOnSkip(func: Function){
+export function setOnSkip(func: Function) {
     onSkip = func;
 }
 
-export function setOnTick(func: Function){
+export function setOnTick(func: Function) {
     onTick = func;
 }
 
@@ -46,6 +51,10 @@ function updateDurations() {
     if (breakSetting) {
         breakDuration = breakSetting.currentValue as number;
     }
+    const longBreakSetting = getSetting("longBreakDuration");
+    if (longBreakSetting) {
+        longBreakDuration = longBreakSetting.currentValue as number;
+    }
 }
 
 export function tick() {
@@ -53,9 +62,7 @@ export function tick() {
     onTick();
     if (minute <= 0 && second <= 0) {
         running = false;
-        onBreak = !onBreak;
-        if (onBreak) minute = breakDuration;
-        else minute = focusDuration;
+        skip();
         alarmAudio.play();
         updateDurations();
         onTimeout();
@@ -74,7 +81,7 @@ export function tick() {
 }
 
 export function startStop() {
-    if(timeoutId) clearTimeout(timeoutId);
+    if (timeoutId) clearTimeout(timeoutId);
     running = !running;
     tick();
     return running;
@@ -93,16 +100,26 @@ export function isRunning() {
     return running;
 }
 
-export function skip(){
-    if(onBreak){
+export function skip() {
+
+    if (currentEvent == "break" || currentEvent == "longbreak") {
+        currentEvent = "focus";
         setTime(focusDuration, 0);
-        onBreak = false;
-    } else {
-        setTime(breakDuration, 0);
-        onBreak = true;
+    } else if (currentEvent == "focus") {
+        pomodoroCount += 1;
+        if (pomodoroCount >= 4) {
+            currentEvent = "longbreak";
+            setTime(longBreakDuration, 0);
+            pomodoroCount = 0;
+        } else {
+            currentEvent = "break";
+            setTime(breakDuration, 0);
+            minute = breakDuration;
+        }
     }
+
     running = false;
-    if(timeoutId) clearTimeout(timeoutId);
+    if (timeoutId) clearTimeout(timeoutId);
     updateDurations();
     onSkip();
 }

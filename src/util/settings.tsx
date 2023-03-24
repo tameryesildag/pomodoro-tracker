@@ -16,6 +16,13 @@ export const defaultSettings: SettingType[] = [
         type: "number"
     },
     {
+        settingId: "longBreakDuration",
+        settingName: "Long break duration (minutes)",
+        defaultValue: 30,
+        currentValue: 30,
+        type: "number"
+    },
+    {
         settingId: "alarmOn",
         settingName: "Alarm",
         defaultValue: true,

@@ -21,6 +21,8 @@ type TimerContainerProps = {
     toggleSettingsWindow(event: React.MouseEvent): void;
 }
 
+type eventType = "break" | "focus" | "longbreak";
+
 export function TimerContainer(props: TimerContainerProps) {
 
     const { settings, setSettings } = useContext(SettingContext);
@@ -34,12 +36,20 @@ export function TimerContainer(props: TimerContainerProps) {
     const [second, setSecond] = useState<string>("00");
     const [minute, setMinute] = useState<string>(addZero(focusDuration.toString()));
     const [running, setRunning] = useState<boolean>(false);
-    const [onBreak, setOnBreak] = useState<boolean>(false);
+    //const [onBreak, setOnBreak] = useState<boolean>(false);
+
+    const [currentEvent, setCurrentEvent] = useState<eventType>("focus");
 
     function updateTime() {
         let newSecond = clock.getTime().second.toString();
         let newMinute = clock.getTime().minute.toString();
-        //document.title = addZero(newMinute) + ":" + addZero(newSecond);
+        if (currentEvent == "break") {
+            document.title = addZero(newMinute) + ":" + addZero(newSecond) + " - Break";
+        } else if (currentEvent == "longbreak") {
+            document.title = addZero(newMinute) + ":" + addZero(newSecond) + " - Long Break";
+        } else {
+            document.title = addZero(newMinute) + ":" + addZero(newSecond) + " - Focus";
+        }
         setSecond(addZero(newSecond));
         setMinute(addZero(newMinute));
     }
@@ -47,12 +57,12 @@ export function TimerContainer(props: TimerContainerProps) {
     useEffect(() => {
         clock.setOnTimeout(() => {
             setRunning(false);
-            setOnBreak(clock.onBreak);
+            setCurrentEvent(clock.currentEvent);
             updateTime();
         });
         clock.setOnSkip(() => {
             setRunning(false);
-            setOnBreak(clock.onBreak);
+            setCurrentEvent(clock.currentEvent);
             updateTime();
         });
         clock.setOnTick(() => {
@@ -68,17 +78,12 @@ export function TimerContainer(props: TimerContainerProps) {
         clock.skip();
     }
 
-    if(onBreak) {
-        document.title = "Break - Pomodoro Tracker";
-    } else {
-        document.title = "Focusing - Pomodoro Tracker";
-    }
-
     return (
         <div className={styles["timer-container"]}>
             <div className={styles["states-container"]}>
-                <div style={{opacity: onBreak ? "0.5" : 1}} className={styles["state"]}>Focus</div>
-                <div style={{opacity: !onBreak ? "0.5" : 1}} className={styles["state"]}>Break</div>
+                <div style={{ opacity: currentEvent == "focus" ? 1 : 0.5 }} className={styles["state"]}>Focus</div>
+                <div style={{ opacity: currentEvent == "break" ? 1 : 0.5 }} className={styles["state"]}>Break</div>
+                <div style={{ opacity: currentEvent == "longbreak" ? 1 : 0.5 }} className={styles["state"]}>Long Break</div>
             </div>
             <Timer minute={minute} second={second}></Timer>
             <div className={styles["control"]}>
