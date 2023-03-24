@@ -43,6 +43,7 @@ function App() {
       if (!user) {
         setTasks([]);
         setLoggedIn(false);
+        updateTasks();
       } else {
         setDoc(doc(db, "users", user.uid), {
           name: user.displayName,

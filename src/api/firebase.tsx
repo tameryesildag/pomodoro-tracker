@@ -25,7 +25,16 @@ const usersCollection = collection(db, "users");
 export function getTasks() {
     return new Promise<Task[]>(async (resolve, reject) => {
         if(!auth.currentUser){
-            reject(new Error("User is not logged in"));
+            const item = localStorage.getItem("tasks");
+            if(item){
+                const tasks = JSON.parse(item) as Task[];
+                tasks.sort((a, b) => {
+                    return (new Date(a.createdAt)).getTime() - (new Date(b.createdAt)).getTime();
+                });
+                resolve(tasks);
+            } else {
+                resolve([]);
+            }
         } else {
             const taskCollectionRef = collection(db, "users", auth.currentUser.uid, "tasks");
             const tasksSnapshot = await getDocs(taskCollectionRef);
@@ -43,7 +52,24 @@ export function getTasks() {
 export function addTask(description: string) {
     return new Promise(async (resolve, reject) => {
         if (!auth.currentUser) {
-            reject(new Error("User is not signed in."));
+            const item = localStorage.getItem("tasks");
+            const newTask = {
+                id: new Date().valueOf().toString(),
+                description,
+                createdAt: (new Date()).toISOString(),
+                done: false
+            };
+            if(item){
+                let tasks = JSON.parse(item) as Task[];
+                tasks.push(newTask)
+                localStorage.setItem("tasks", JSON.stringify(tasks));
+                resolve(true);
+            } else {
+                let tasks:Task[] = [];
+                tasks.push(newTask);
+                localStorage.setItem("tasks", JSON.stringify(tasks));
+                resolve(true);
+            }
         } else {
             await addDoc(collection(db, "users", auth.currentUser.uid, "tasks"), {
                 description,
