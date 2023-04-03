@@ -84,7 +84,14 @@ export function addTask(description: string) {
 export function deleteTask(taskId: string) {
     return new Promise((resolve, reject) => {
         if(!auth.currentUser) {
-            reject(new Error("User is not signed in"));
+            getTasks().then(tasks => {
+                const taskIndex = tasks.findIndex(t => {
+                    return t.id == taskId;
+                })
+                tasks.splice(taskIndex, 1);
+                localStorage.setItem("tasks", JSON.stringify(tasks));
+                resolve(true);
+            })
         } else {
             const docToDelete = doc(db, "users", auth.currentUser.uid, "tasks", taskId);
             deleteDoc(docToDelete).then(() => {
@@ -97,7 +104,14 @@ export function deleteTask(taskId: string) {
 export function taskDone(taskId: string) {
     return new Promise((resolve, reject) => {
         if(!auth.currentUser) {
-            reject(new Error("User is not signed in"));
+            getTasks().then(tasks => {
+                const taskIndex = tasks.findIndex(t => {
+                    return t.id == taskId;
+                })
+                tasks.splice(taskIndex, 1);
+                localStorage.setItem("tasks", JSON.stringify(tasks));
+                resolve(true);
+            });
         } else {
             const docToUpdate = doc(db, "users", auth.currentUser.uid, "tasks", taskId);
             updateDoc(docToUpdate, { done: true }).then(() => {
