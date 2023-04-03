@@ -105,10 +105,9 @@ export function taskDone(taskId: string) {
     return new Promise((resolve, reject) => {
         if(!auth.currentUser) {
             getTasks().then(tasks => {
-                const taskIndex = tasks.findIndex(t => {
-                    return t.id == taskId;
-                })
-                tasks.splice(taskIndex, 1);
+                const t = tasks.find(t => t.id == taskId);
+                if(!t) return reject(new Error("Couldn't find the task with given ID."));
+                t.done = true;
                 localStorage.setItem("tasks", JSON.stringify(tasks));
                 resolve(true);
             });
@@ -125,7 +124,13 @@ export function taskDone(taskId: string) {
 export function taskUndone(taskId: string) {
     return new Promise((resolve, reject) => {
         if(!auth.currentUser) {
-            reject(new Error("User is not signed in"));
+            getTasks().then(tasks => {
+                const t = tasks.find(t => t.id == taskId);
+                if(!t) return reject(new Error("Couldn't find the task with given ID."));
+                t.done = false;
+                localStorage.setItem("tasks", JSON.stringify(tasks));
+                resolve(true);
+            });
         } else {
             const docToUpdate = doc(db, "users", auth.currentUser.uid, "tasks", taskId);
             updateDoc(docToUpdate, { done: false }).then(() => {
