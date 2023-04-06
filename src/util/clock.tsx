@@ -1,6 +1,7 @@
 import { getSetting } from "./settings";
 import alarmSound from "../assets/alarm.mp3";
 import { clearInterval, clearTimeout, setInterval, setTimeout } from 'worker-timers';
+import { addMinute } from "../api/firebase";
 
 const alarmAudio = new Audio(alarmSound);
 
@@ -81,6 +82,9 @@ export function tick() {
         second = 59
         minute = minute - 1;
         timeoutId = setTimeout(tick, 1000);
+
+        addMinute();
+
         return;
     } else {
         second = second - 1;

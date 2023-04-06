@@ -3,6 +3,8 @@ import { getFirestore, collection, doc, getDocs, addDoc, deleteDoc, updateDoc, s
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import Task from "../types/Task";
 import User from "../types/User";
+import { formatDate } from "../util/date";
+import Day from "../types/Day";
 
 const firebaseConfig = {
     apiKey: "AIzaSyA6POHcbHes2sfBNK08MjEIFPyQz6KGtGg",
@@ -138,6 +140,37 @@ export function taskUndone(taskId: string) {
             });
         }
     })
+}
+
+export async function addMinute(){
+    if(!auth.currentUser){
+        return;
+    } else {
+        const daysDoc = doc(db, "users", auth.currentUser.uid, "days", formatDate(new Date()));
+        const docSnap = await getDoc(daysDoc);
+        if(docSnap.exists()){
+            let oldMinutes = docSnap.data().minutes | 0;
+            updateDoc(daysDoc, {minutes: oldMinutes + 1});
+        } else {
+            setDoc(daysDoc, {minutes: 1});
+        }
+    }
+}
+
+export function getDays(){
+    return new Promise(async (resolve, reject) => {
+        if(!auth.currentUser){
+            reject(new Error("User not logged in."));
+        } else {
+            const daysCollection = collection(db, "users", auth.currentUser.uid, "days");
+            const daysDocs = await getDocs(daysCollection);
+            const days:Day[] = daysDocs.docs.map(d => {
+                return {...d.data(), date: d.id} as Day;
+            })
+            resolve(days);
+        }
+    })
+
 }
 
 export const provider = new GoogleAuthProvider();

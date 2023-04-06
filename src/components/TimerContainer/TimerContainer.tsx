@@ -4,6 +4,7 @@ import { Timer } from "../Timer/Timer";
 import styles from "./TimerContainer.module.css";
 import gearImage from "../../assets/gear.png";
 import nextImage from "../../assets/next.png";
+import chartImage from "../../assets/chart.png";
 import alarmSound from "../../assets/alarm.mp3";
 import SettingType from "../../types/SettingType";
 import { SettingContext } from "../../contexts/SettingsContext";
@@ -19,6 +20,7 @@ function addZero(num: string) {
 
 type TimerContainerProps = {
     toggleSettingsWindow(event: React.MouseEvent): void;
+    toggleDataWindow(event: React.MouseEvent): void;
 }
 
 type eventType = "break" | "focus" | "longbreak";
@@ -71,6 +73,8 @@ export function TimerContainer(props: TimerContainerProps) {
         clock.skip();
     }
 
+
+
     if (currentEvent == "break") {
         document.title = addZero(minute) + ":" + addZero(second) + " - Break";
     } else if (currentEvent == "longbreak") {
@@ -90,7 +94,8 @@ export function TimerContainer(props: TimerContainerProps) {
             <div className={styles["control"]}>
                 <button onClick={onStartStopClick} className={styles["start-stop-button"]}>{running ? "Pause" : "Start"}</button>
                 <button title="Skip" onClick={onSkipClick} className={styles["skip-button"]}><img className={styles["skip-image"]} src={nextImage}></img></button>
-                <button title="Settings" onClick={props.toggleSettingsWindow} className={styles["settings-button"]} style={{ background: `url(${gearImage})`, backgroundSize: "cover" }}></button>
+                <button title="Settings" onClick={props.toggleSettingsWindow} className={styles["image-button"]} style={{ background: `url(${gearImage})`, backgroundSize: "cover" }}></button>
+                <button title="Data" onClick={props.toggleDataWindow} className={styles["image-button"]} style={{ background: `url(${chartImage})`, backgroundSize: "cover" }}></button>
             </div>
         </div>
     )

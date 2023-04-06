@@ -1,4 +1,4 @@
-import { auth, getTasks, db } from "./api/firebase";
+import { auth, getTasks, db, getDays } from "./api/firebase";
 import React from "react";
 import { useState, useEffect } from "react";
 import styles from "./App.module.css";
@@ -65,13 +65,19 @@ function App() {
     })
   }
 
+  function toggleDataWindow(event: React.MouseEvent) {
+    getDays().then(days => {
+      console.log(days);
+    })
+  }
+
   return (
     <div className="App">
       <SettingContextProvider>
         <Header loggedIn={loggedIn}></Header>
         <SettingsWindow closeWindow={toggleSettingsWindow} isOpen={isSettingsWindowOpen}></SettingsWindow>
         <main className={styles["content"]}>
-          <TimerContainer toggleSettingsWindow={toggleSettingsWindow}></TimerContainer>
+          <TimerContainer toggleDataWindow={toggleDataWindow} toggleSettingsWindow={toggleSettingsWindow}></TimerContainer>
           <TaskContainer updateTasks={updateTasks} tasks={tasks}></TaskContainer>
         </main>
       </SettingContextProvider>
