@@ -68,6 +68,7 @@ function App() {
   }
 
   function toggleDataWindow(event: React.MouseEvent) {
+    if(!auth.currentUser) return alert("Log in to keep track of your progress.")
     setIsDataWindowOpen(s => {
       return !s;
     });
