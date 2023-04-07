@@ -15,8 +15,6 @@ export function SettingsWindow(props: SettingsWindowProp) {
 
     const {settings, setSettings} = useContext(SettingContext);
 
-    //const [tempSettings, setTempSettings] = useState<SettingType[]>(settings);
-
     function onCloseClick() {
         props.closeWindow();
     }

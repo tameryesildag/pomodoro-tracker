@@ -82,9 +82,7 @@ export function tick() {
         second = 59
         minute = minute - 1;
         timeoutId = setTimeout(tick, 1000);
-
-        addMinute();
-
+        if(currentEvent == "focus") addMinute();
         return;
     } else {
         second = second - 1;

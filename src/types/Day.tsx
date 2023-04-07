@@ -1,5 +1,5 @@
 type Day = {
-    date:string;
+    date:Date;
     minutes:number;
 }
 

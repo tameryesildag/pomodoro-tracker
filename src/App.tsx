@@ -12,6 +12,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import User from "./types/User";
 import { setDoc, doc } from "firebase/firestore";
 import { SettingContextProvider } from "./contexts/SettingsContext";
+import DataWindow from "./components/DataWindow/DataWindow";
 
 document.body.style.backgroundColor = "#222831";
 document.body.style.margin = "0";
@@ -20,6 +21,7 @@ function App() {
 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isSettingsWindowOpen, setIsSettingsWindowOpen] = useState<boolean>(false);
+  const [isDataWindowOpen, setIsDataWindowOpen] = useState<boolean>(false);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
   function updateTasks() {
@@ -62,13 +64,13 @@ function App() {
   function toggleSettingsWindow(event: React.MouseEvent) {
     setIsSettingsWindowOpen(s => {
       return !s;
-    })
+    });
   }
 
   function toggleDataWindow(event: React.MouseEvent) {
-    getDays().then(days => {
-      console.log(days);
-    })
+    setIsDataWindowOpen(s => {
+      return !s;
+    });
   }
 
   return (
@@ -76,6 +78,7 @@ function App() {
       <SettingContextProvider>
         <Header loggedIn={loggedIn}></Header>
         <SettingsWindow closeWindow={toggleSettingsWindow} isOpen={isSettingsWindowOpen}></SettingsWindow>
+        {auth.currentUser ? <DataWindow closeWindow={toggleDataWindow} isOpen={isDataWindowOpen}></DataWindow> : null}
         <main className={styles["content"]}>
           <TimerContainer toggleDataWindow={toggleDataWindow} toggleSettingsWindow={toggleSettingsWindow}></TimerContainer>
           <TaskContainer updateTasks={updateTasks} tasks={tasks}></TaskContainer>

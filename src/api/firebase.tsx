@@ -1,10 +1,11 @@
 import { initializeApp, getApps } from "firebase/app";
-import { getFirestore, collection, doc, getDocs, addDoc, deleteDoc, updateDoc, setDoc, getDoc, arrayUnion, getDocFromServer } from "firebase/firestore";
+import { getFirestore, query, collection, doc, getDocs, addDoc, deleteDoc, updateDoc, setDoc, getDoc, arrayUnion, getDocFromServer, orderBy, limit, where } from "firebase/firestore";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import Task from "../types/Task";
 import User from "../types/User";
 import { formatDate } from "../util/date";
 import Day from "../types/Day";
+import moment from "moment";
 
 const firebaseConfig = {
     apiKey: "AIzaSyA6POHcbHes2sfBNK08MjEIFPyQz6KGtGg",
@@ -152,25 +153,49 @@ export async function addMinute(){
             let oldMinutes = docSnap.data().minutes | 0;
             updateDoc(daysDoc, {minutes: oldMinutes + 1});
         } else {
-            setDoc(daysDoc, {minutes: 1});
+            setDoc(daysDoc, {date: new Date(), minutes: 1});
         }
     }
 }
 
 export function getDays(){
-    return new Promise(async (resolve, reject) => {
+    return new Promise<Day[]>(async (resolve, reject) => {
         if(!auth.currentUser){
             reject(new Error("User not logged in."));
         } else {
             const daysCollection = collection(db, "users", auth.currentUser.uid, "days");
-            const daysDocs = await getDocs(daysCollection);
-            const days:Day[] = daysDocs.docs.map(d => {
-                return {...d.data(), date: d.id} as Day;
-            })
+            const thirtyDaysAgo = moment().subtract(30, "days");
+            const daysQuery = query(daysCollection, orderBy("date", "desc"), limit(30), where("date", ">=", thirtyDaysAgo.toDate()));
+
+            const querySnapshot = await getDocs(daysQuery);
+
+            let days:Day[] = [];
+            
+            for(let i = 0; i < 10; i++){
+                days.push(
+                    {
+                        date: moment().subtract(i, "days").toDate(),
+                        minutes: 0
+                    }
+                )
+            }
+
+            querySnapshot.forEach(doc => {
+                const day = days.find(d => {
+                    let moment1 = moment(d.date);
+                    let moment2 = moment(new Date(doc.data().date.seconds * 1000));
+                    return moment1.isSame(moment2, "day");
+                })
+                if(day){
+                    day.minutes = doc.data().minutes;
+                }
+            });
+            
+            days = days.reverse();
+
             resolve(days);
         }
     })
-
 }
 
 export const provider = new GoogleAuthProvider();
