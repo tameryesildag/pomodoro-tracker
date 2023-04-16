@@ -15,7 +15,7 @@ export default function DataWindow(props: DataWindowProps) {
 
     const [days, setDays] = useState<Day[]>([]);
 
-    ChartJS.register(LinearScale, CategoryScale, BarElement);
+    ChartJS.register(LinearScale, CategoryScale, BarElement, Tooltip);
 
     const data = {
         labels: days.map(day => day.date.getDate()),
@@ -34,6 +34,15 @@ export default function DataWindow(props: DataWindowProps) {
                 beginAtZero: true,
                 max: Math.max(...days.map(day => day.minutes)) + 60, // Add 60 minutes buffer to the highest value
                 stepSize: 60 // Display y-axis labels in increments of 60
+            }
+        },
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function(item:any){
+                        return item.parsed.y + " minutes";
+                    }
+                }
             }
         }
     };
