@@ -43,7 +43,7 @@ export default function DataWindow(props: DataWindowProps) {
             console.log(newDays);
             setDays(newDays);
         })
-    }, []);
+    }, [props.isOpen]);
 
     function onCloseClick() {
         props.closeWindow();
