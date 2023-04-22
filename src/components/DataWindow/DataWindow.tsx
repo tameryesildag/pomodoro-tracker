@@ -32,7 +32,7 @@ export default function DataWindow(props: DataWindowProps) {
         scales: {
             y: {
                 beginAtZero: true,
-                max: Math.max(...days.map(day => day.minutes)) + 60, // Add 60 minutes buffer to the highest value
+                max: Math.max(...days.map(day => day.minutes)) + 10, // Add 60 minutes buffer to the highest value
                 stepSize: 60 // Display y-axis labels in increments of 60
             }
         },
