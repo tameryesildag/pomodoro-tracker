@@ -5,6 +5,7 @@
     margin: 10px;
     width: 250px;
     height: auto;
+    background-color: #222831;
 }
 
 .task-card:hover {

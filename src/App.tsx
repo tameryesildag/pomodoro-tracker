@@ -74,6 +74,14 @@ function App() {
     });
   }
 
+  function changeTaskIndex(oldIndex:number, newIndex: number){
+    let newTasks:Task[] =  [...tasks];
+    let taskToMove = newTasks[oldIndex];
+    newTasks.splice(oldIndex, 1);
+    newTasks.splice(newIndex, 0, taskToMove);
+    setTasks(newTasks);
+  }
+
   return (
     <div className="App">
       <SettingContextProvider>
@@ -82,7 +90,7 @@ function App() {
         {auth.currentUser ? <DataWindow closeWindow={toggleDataWindow} isOpen={isDataWindowOpen}></DataWindow> : null}
         <main className={styles["content"]}>
           <TimerContainer toggleDataWindow={toggleDataWindow} toggleSettingsWindow={toggleSettingsWindow}></TimerContainer>
-          <TaskContainer updateTasks={updateTasks} tasks={tasks}></TaskContainer>
+          <TaskContainer changeTaskIndex={changeTaskIndex} updateTasks={updateTasks} tasks={tasks}></TaskContainer>
         </main>
       </SettingContextProvider>
     </div>
