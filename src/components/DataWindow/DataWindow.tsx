@@ -49,7 +49,6 @@ export default function DataWindow(props: DataWindowProps) {
 
     useEffect(() => {
         getDays().then(newDays => {
-            console.log(newDays);
             setDays(newDays);
         })
     }, [props.isOpen]);
