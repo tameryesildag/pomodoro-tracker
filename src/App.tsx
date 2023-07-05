@@ -1,4 +1,4 @@
-import { auth, getTasks, db, getDays } from "./api/firebase";
+import { auth, getTasks, db, getDays, updateIndexes } from "./api/firebase";
 import React from "react";
 import { useState, useEffect } from "react";
 import styles from "./App.module.css";
@@ -9,7 +9,6 @@ import { SettingsWindow } from "./components/SettingsWindow/SettingsWindow";
 import "./assets/bootstrap.min.css";
 import { Header } from "./components/Header/Header";
 import { onAuthStateChanged } from "firebase/auth";
-import User from "./types/User";
 import { setDoc, doc } from "firebase/firestore";
 import { SettingContextProvider } from "./contexts/SettingsContext";
 import DataWindow from "./components/DataWindow/DataWindow";
@@ -24,7 +23,12 @@ function App() {
   const [isDataWindowOpen, setIsDataWindowOpen] = useState<boolean>(false);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
-  function updateTasks() {
+  useEffect(()=> {
+    updateIndexes(tasks);
+  }, [tasks]);
+
+  async function updateTasks() {
+    //await updateIndexes(tasks);
     getTasks().then(tasks => {
       setTasks(tasks);
     }).catch(err => {
@@ -80,6 +84,7 @@ function App() {
     newTasks.splice(oldIndex, 1);
     newTasks.splice(newIndex, 0, taskToMove);
     setTasks(newTasks);
+    updateIndexes(newTasks);
   }
 
   return (
