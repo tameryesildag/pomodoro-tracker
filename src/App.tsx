@@ -28,7 +28,6 @@ function App() {
   }, [tasks]);
 
   async function updateTasks() {
-    //await updateIndexes(tasks);
     getTasks().then(tasks => {
       setTasks(tasks);
     }).catch(err => {
