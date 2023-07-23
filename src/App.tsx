@@ -1,4 +1,4 @@
-import { auth, getTasks, db, getDays, updateIndexes } from "./api/firebase";
+import { auth, getTasks, db, getDays, updateIndexes, clearTasks } from "./api/firebase";
 import React from "react";
 import { useState, useEffect } from "react";
 import styles from "./App.module.css";
@@ -34,6 +34,11 @@ function App() {
       console.log(err);
       setTasks([]);
     })
+  }
+
+  async function deleteAllTasks() {
+    clearTasks();
+    setTasks([]);
   }
 
   useEffect(() => {
@@ -94,7 +99,7 @@ function App() {
         {auth.currentUser ? <DataWindow closeWindow={toggleDataWindow} isOpen={isDataWindowOpen}></DataWindow> : null}
         <main className={styles["content"]}>
           <TimerContainer toggleDataWindow={toggleDataWindow} toggleSettingsWindow={toggleSettingsWindow}></TimerContainer>
-          <TaskContainer changeTaskIndex={changeTaskIndex} updateTasks={updateTasks} tasks={tasks}></TaskContainer>
+          <TaskContainer deleteAllTasks={deleteAllTasks} changeTaskIndex={changeTaskIndex} updateTasks={updateTasks} tasks={tasks}></TaskContainer>
         </main>
       </SettingContextProvider>
     </div>

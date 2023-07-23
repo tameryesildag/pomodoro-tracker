@@ -227,6 +227,25 @@ export function getDays() {
     })
 }
 
+export async function clearTasks() {
+    return new Promise(async (resolve, reject) => {
+        if (!auth.currentUser) {
+            localStorage.setItem("tasks", JSON.stringify([]));
+        } else {
+            try {
+                let taskCollection = collection(db, "users", auth.currentUser.uid, "tasks");
+                let taskCollectionSnapshot = await getDocs(taskCollection);
+                taskCollectionSnapshot.forEach(async doc => {
+                    await deleteDoc(doc.ref);
+                })
+                resolve(true);
+            } catch(err){
+                reject(err);
+            }
+        }
+    })
+}
+
 export const provider = new GoogleAuthProvider();
 
 export const auth = getAuth();

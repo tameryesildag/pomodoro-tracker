@@ -1,0 +1,16 @@
+.trash-button{
+    border: 1px solid white;
+    width: 100%;
+    padding: 5px;
+    color: white;
+    font: inherit;
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+}
+
+.trash-button:hover{
+    background-color: #393e46;
+}

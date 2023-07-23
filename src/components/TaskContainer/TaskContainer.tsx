@@ -4,24 +4,28 @@ import TaskCard from "../TaskCard/TaskCard"
 import TaskCardInput from "../TaskCardInput/TaskCardInput";
 import styles from "./TaskContainer.module.css";
 import { DragDropContext, Droppable, OnDragEndResponder } from "react-beautiful-dnd";
+import TrashButton from "../TrashButton/TrashButton";
 
 type TaskContainerProp = {
     tasks: Task[];
     updateTasks: Function;
     changeTaskIndex: Function;
+    deleteAllTasks: any;
 }
 
 export default function TaskContainer(props: TaskContainerProp) {
 
-    const onDragEnd:OnDragEndResponder = (result) => {
-        if(!result.destination) return;
-        if(result.destination.index == result.source.index) return;
+    const onDragEnd: OnDragEndResponder = (result) => {
+        if (!result.destination) return;
+        if (result.destination.index == result.source.index) return;
         props.changeTaskIndex(result.source.index, result.destination.index);
     }
 
     return (
         <div className={styles["task-container"]}>
-            <div className={styles["container-title"]}>Tasks</div>
+            <div className={styles["container-title"]}>
+                <TrashButton deleteAllTasks={props.deleteAllTasks}></TrashButton>
+            </div>
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="droppable-1">
                     {(provided) => (
