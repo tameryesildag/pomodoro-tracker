@@ -64,9 +64,6 @@ function App() {
         });
       }
     })
-
-    document.title = "Pomodoro Tracker";
-
   }, []);
 
   function toggleSettingsWindow(event: React.MouseEvent) {
