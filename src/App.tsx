@@ -1,4 +1,4 @@
-import { auth, getTasks, db, getDays, updateIndexes, clearTasks } from "./api/firebase";
+import * as api from "./api/firebase";
 import React from "react";
 import { useState, useEffect } from "react";
 import styles from "./App.module.css";
@@ -23,12 +23,12 @@ function App() {
   const [isDataWindowOpen, setIsDataWindowOpen] = useState<boolean>(false);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
-  useEffect(()=> {
-    updateIndexes(tasks);
+  useEffect(() => {
+    api.updateIndexes(tasks);
   }, [tasks]);
 
   async function updateTasks() {
-    getTasks().then(tasks => {
+    api.getTasks().then(tasks => {
       setTasks(tasks);
     }).catch(err => {
       console.log(err);
@@ -37,25 +37,25 @@ function App() {
   }
 
   async function deleteAllTasks() {
-    clearTasks();
+    api.clearTasks();
     setTasks([]);
   }
 
   useEffect(() => {
-    getTasks().then(tasks => {
+    api.getTasks().then(tasks => {
       setTasks(tasks);
     }).catch((err) => {
       console.log(err);
       setTasks([]);
     })
 
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(api.auth, (user) => {
       if (!user) {
         setTasks([]);
         setLoggedIn(false);
         updateTasks();
       } else {
-        setDoc(doc(db, "users", user.uid), {
+        setDoc(doc(api.db, "users", user.uid), {
           name: user.displayName,
           email: user.email,
         }, { merge: true }).then(() => {
@@ -73,19 +73,23 @@ function App() {
   }
 
   function toggleDataWindow(event: React.MouseEvent) {
-    if(!auth.currentUser) return alert("Log in to keep track of your progress.")
+    if (!api.auth.currentUser) return alert("Log in to keep track of your progress.")
     setIsDataWindowOpen(s => {
       return !s;
     });
   }
 
-  function changeTaskIndex(oldIndex:number, newIndex: number){
-    let newTasks:Task[] =  [...tasks];
+  function addTask(){
+
+  }
+
+  function changeTaskIndex(oldIndex: number, newIndex: number) {
+    let newTasks: Task[] = [...tasks];
     let taskToMove = newTasks[oldIndex];
     newTasks.splice(oldIndex, 1);
     newTasks.splice(newIndex, 0, taskToMove);
     setTasks(newTasks);
-    updateIndexes(newTasks);
+    api.updateIndexes(newTasks);
   }
 
   return (
@@ -93,7 +97,7 @@ function App() {
       <SettingContextProvider>
         <Header loggedIn={loggedIn}></Header>
         <SettingsWindow closeWindow={toggleSettingsWindow} isOpen={isSettingsWindowOpen}></SettingsWindow>
-        {auth.currentUser ? <DataWindow closeWindow={toggleDataWindow} isOpen={isDataWindowOpen}></DataWindow> : null}
+        {api.auth.currentUser ? <DataWindow closeWindow={toggleDataWindow} isOpen={isDataWindowOpen}></DataWindow> : null}
         <main className={styles["content"]}>
           <TimerContainer toggleDataWindow={toggleDataWindow} toggleSettingsWindow={toggleSettingsWindow}></TimerContainer>
           <TaskContainer deleteAllTasks={deleteAllTasks} changeTaskIndex={changeTaskIndex} updateTasks={updateTasks} tasks={tasks}></TaskContainer>
