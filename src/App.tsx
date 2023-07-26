@@ -55,13 +55,8 @@ function App() {
         setLoggedIn(false);
         updateTasks();
       } else {
-        setDoc(doc(api.db, "users", user.uid), {
-          name: user.displayName,
-          email: user.email,
-        }, { merge: true }).then(() => {
-          updateTasks();
-          setLoggedIn(true);
-        });
+        setLoggedIn(true);
+        updateTasks();
       }
     })
   }, []);

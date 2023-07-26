@@ -42,6 +42,7 @@ export function SettingsWindow(props: SettingsWindowProp) {
                     </div>
                 </div>
                 <div className={styles["settings-container"]}>
+                    <p style={{textAlign:"center"}}>Changes will be applied in the next session.</p>
                     {settings.map((s, i) => {
                         return (
                             <Setting key={i} changeSetting={changeSetting} setting={s}></Setting>

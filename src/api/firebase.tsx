@@ -239,7 +239,7 @@ export async function clearTasks() {
                     await deleteDoc(doc.ref);
                 })
                 resolve(true);
-            } catch(err){
+            } catch (err) {
                 reject(err);
             }
         }
@@ -255,6 +255,11 @@ export function login() {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential?.accessToken;
         const user = result.user;
+        setDoc(doc(db, "users", user.uid), {
+            name: user.displayName,
+            email: user.email,
+        }, { merge: true });
+
     }).catch(error => {
         const errorCode = error.code;
         const errorMessage = error.message;
