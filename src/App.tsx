@@ -36,7 +36,7 @@ function App() {
     })
   }
 
-  async function deleteAllTasks() {
+  async function clearTasks() {
     api.clearTasks();
     setTasks([]);
   }
@@ -73,11 +73,7 @@ function App() {
       return !s;
     });
   }
-
-  function addTask(){
-
-  }
-
+  
   function changeTaskIndex(oldIndex: number, newIndex: number) {
     let newTasks: Task[] = [...tasks];
     let taskToMove = newTasks[oldIndex];
@@ -95,7 +91,7 @@ function App() {
         {api.auth.currentUser ? <DataWindow closeWindow={toggleDataWindow} isOpen={isDataWindowOpen}></DataWindow> : null}
         <main className={styles["content"]}>
           <TimerContainer toggleDataWindow={toggleDataWindow} toggleSettingsWindow={toggleSettingsWindow}></TimerContainer>
-          <TaskContainer deleteAllTasks={deleteAllTasks} changeTaskIndex={changeTaskIndex} updateTasks={updateTasks} tasks={tasks}></TaskContainer>
+          <TaskContainer deleteAllTasks={clearTasks} changeTaskIndex={changeTaskIndex} updateTasks={updateTasks} tasks={tasks}></TaskContainer>
         </main>
       </SettingContextProvider>
     </div>
